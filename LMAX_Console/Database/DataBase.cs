@@ -139,7 +139,7 @@ namespace Database
         /// is a list of users TradingClass that represents the current user account, that listen the current key SystemID
         /// </summary>
         /// <returns>a dictionary : key - user listened SystemID, value - a list of users thet listening current SystemID(key)</returns>
-        public Dictionary<Int32, List<TradingClass>> getConnectedUsers(MainDBhandler mainDBhandler, ErrorHandler errorHandler)
+        public Dictionary<Int32, List<TradingClass>> getConnectedUsers(ErrorDbHandler mainDBhandler, ErrorHandler errorHandler)
         {
             Dictionary<Int32, List<TradingClass>> initializedFollowers = new Dictionary<Int32, List<TradingClass>>();
             List<CompleteFollower> followers = new List<CompleteFollower>();

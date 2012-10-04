@@ -51,7 +51,7 @@ namespace Sender
         private static Boolean isQuit, isRefrash;
         private static ExternalClientManager externalClientManager;
         //???
-        public static MainDBhandler  dbHandler;
+        public static ErrorDbHandler  dbHandler;
         public  static LocalDbHandler localDbHandler;
         public static SystemContainer systemContainer;
         public static List<String>    NewUsers;
@@ -133,7 +133,7 @@ namespace Sender
             BlockingCollection<Operations>  blokingQueue = new BlockingCollection<Operations>();
 
             //create sender db handler
-            dbHandler = new MainDBhandler();
+            dbHandler = new ErrorDbHandler();
 
             //create object for manipulat with local DB
             localDbHandler = new LocalDbHandler();

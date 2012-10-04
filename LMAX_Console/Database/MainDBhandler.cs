@@ -9,32 +9,25 @@ using Sender;
 
 namespace Database
 {
-    public class MainDBhandler
+    public class ErrorDbHandler
     {
         private const String PLATFORM = "LMAX";
         private SqlConnection conn;
-        private SqlConnection errorConn;
         private Object SQLlock;
 
-        public MainDBhandler()
+        public ErrorDbHandler()
         {
-            //Create lock objects
             SQLlock = new Object();
             ConnectToUserHistoy();
         }
 
-        public void ConnectToUserHistoy(String dataSource = "WIN-83YVOQWW9RH\\SQLEXPRESS",
-                             String dbPort = "1642",
-                             String initialCatalog = "USERHISTORY",
-                             String user = "rootuser",
-                             String password = "qwerty"
-            )
+        public void ConnectToUserHistoy()
         {
             String sqlStr = "Network Library=DBMSSOCN;" +
-                            "Data Source=" + dataSource + "," + dbPort + ";" +
-                            "Initial Catalog=" + initialCatalog + ";" +
-                            "User Id=" + user + ";" +
-                            "Password=" + password + ";";
+                            "Data Source=" + Program.config["error_db_location"] + "," + Program.config["error_db_port"] + ";" +
+                            "Initial Catalog=" + Program.config["error_db_name"] + ";" +
+                            "User Id=" + Program.config["error_db_login"] + ";" +
+                            "Password=" + Program.config["error_db_password"] + ";";
 
             conn = new SqlConnection(sqlStr);
             conn.Open();
@@ -45,20 +38,25 @@ namespace Database
             conn.Close();
         }
 
-        public void SendOrder(String userID, Order order)
+        private void WriteError(string userId)
         {
-            lock(SQLlock)
+            StringBuilder sqlQuery = new StringBuilder();
+            sqlQuery.Append("INSERT INTO ERRORMARKS (USERID, MARKEDERROR) VALUE ('" + userId + "', " + "'FALSE')");
+            SqlCommand sqlCommand = new SqlCommand(sqlQuery.ToString(), conn);
+            try
             {
-            
-                    String sqlString =
-                        "INSERT INTO HISTORY (\"USERID\", \"SYSTEMID\", \"DIRECTION\", \"SYMBOL\", \"VOLUME\", \"PRICE\")\n VALUES (";
-                    sqlString += " '" + userID + "', " + Convert.ToString(order.FromID) + ", " + order.Direction + ", '" +
-                                 order.Symbol + "', " + order.Lots.ToString("G", CultureInfo.InvariantCulture) + ", " +
-                                 Convert.ToString(order.Price, CultureInfo.InvariantCulture) + ");";
-                    SqlCommand sqlCommads = new SqlCommand(sqlString, conn);
-                    Console.WriteLine(sqlCommads.CommandText);
-                    sqlCommads.ExecuteNonQuery();
-                
+                sqlCommand.ExecuteNonQuery();
+            }
+            catch (Exception e)
+            {
+                Program.log.Error("Exception in MainDBhandler.WriteError : " + e.Message + " SqlQuery : " + sqlQuery.ToString());
+                Program.log.Debug(e.StackTrace.ToString());
+                Program.WriteError("Exception in ErrorDBhandler.WriteError : " + e.Message);
+                Program.WriteError("SQL query : " + sqlQuery);
+            }
+            finally
+            {
+                sqlCommand.Dispose();
             }
         }
 
@@ -71,39 +69,44 @@ namespace Database
         {
             lock(SQLlock)
             {
+                WriteError(userID);
+
                 StringBuilder sqlQuery = new StringBuilder();
-                sqlQuery.Append("INSERT INTO \"USERS\".dbo.\"ERROR_LOGS\" (\"USERID\", \"SYSTEMID\", \"ERRORTEXT\", \"SOLVED\", ");
-                sqlQuery.Append("\"ERRORINITTIME\", \"ERRORSOLVETIME\", \"PREVTIME\", \"ORDERID\", \"DIRECTION\", \"SYMBOL\", \"LOTS\")\nVALUES\n");
+                sqlQuery.Append("INSERT INTO \"USERS\".dbo.\"ERROR_LOGS\" (\"USERID\", \"SYSTEMID\", \"ERRORTEXT\", \"SOLVED\", ")
+                    .Append("\"ERRORINITTIME\", \"ERRORSOLVETIME\", \"PREVTIME\", \"ORDERID\", \"DIRECTION\", \"SYMBOL\", \"LOTS\")\nVALUES\n")
                 //UserID
-                sqlQuery.Append("('").Append(userID).Append("', ");
+                    .Append("('").Append(userID).Append("', ")
                 //SYSTEMID
-                sqlQuery.Append(order.FromID).Append(", ");
+                    .Append(order.FromID).Append(", ")
                 //ERRORTEXT
-                sqlQuery.Append("'").Append(order.Comment??"").Append("', ");
+                    .Append("'").Append(order.Comment??"").Append("', ")
                 //SOLVED
-                sqlQuery.Append("0, ");
+                    .Append("0, ")
                 //ERRORINITTIME
-                sqlQuery.Append("'").Append(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")).Append("', ");
+                    .Append("'").Append(DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss.fff")).Append("', ")
                 //ERRORSOLVETIME
-                sqlQuery.Append("NULL, ");
+                    .Append("NULL, ")
                 //PREVTIME
-                sqlQuery.Append("'").Append(order.PrevScanTime.ToString("yyyy-MM-dd HH:mm:ss.fff")).Append("', ");
+                    .Append("'").Append(order.PrevScanTime.ToString("yyyy-MM-dd HH:mm:ss.fff")).Append("', ")
                 //ORDERID
-                sqlQuery.Append("'").Append(order.lOrderId).Append("', ");
+                    .Append("'").Append(order.lOrderId).Append("', ")
                 //DIRECTION
-                sqlQuery.Append(order.Direction).Append(", ");
+                    .Append(order.Direction).Append(", ")
                 //SYMBOL
-                sqlQuery.Append("'").Append(order.Symbol).Append("', ");
+                    .Append("'").Append(order.Symbol).Append("', ")
                 //LOTS
-                sqlQuery.Append(order.Lots.ToString("G", CultureInfo.InvariantCulture));
-                sqlQuery.Append(");");
+                    .Append(order.Lots.ToString("G", CultureInfo.InvariantCulture))
+                    .Append(");");
                 SqlCommand sqlCommand = new SqlCommand(sqlQuery.ToString(), conn);
                 try
                 {
                     sqlCommand.ExecuteNonQuery();
+
                 }
                 catch(Exception e)
                 {
+                    Program.log.Error("Exception in MainDBhandler.WriteLog : " + e.Message+" SqlQuery : "+sqlQuery.ToString());
+                    Program.log.Debug(e.StackTrace.ToString());
                     Program.WriteError("Exception in MainDBhandler.WriteLog : "+e.Message);
                     Program.WriteError("SQL query : "+sqlQuery.ToString());
                 }

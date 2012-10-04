@@ -20,7 +20,7 @@ namespace Follower
         private API     _api;
         private String  site = "http://hotwo.com";
         private ErrorHandler _emailNotifier;
-        private MainDBhandler dbHandler;
+        private ErrorDbHandler dbHandler;
         private String _followerID;
         private Presets.SynchronizationMode _syncMode;
 
@@ -52,7 +52,7 @@ namespace Follower
             };
         }
 
-        public TradingClass(String _userID, String userName, String userPassword, String url, String email, MainDBhandler _dbHandler, Presets.SynchronizationMode syncMode = Presets.SynchronizationMode.SynchronizePositions)
+        public TradingClass(String _userID, String userName, String userPassword, String url, String email, ErrorDbHandler _dbHandler, Presets.SynchronizationMode syncMode = Presets.SynchronizationMode.SynchronizePositions)
         {
             FollowerEmail =  email;
             dbHandler     = _dbHandler;
