@@ -1,0 +1,1 @@
+svcutil http://localhost:9080/ /o:ServiceProxy.cs /config:App.Config /n:*,UserControlSystem

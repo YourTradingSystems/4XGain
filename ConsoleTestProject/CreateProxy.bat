@@ -1,0 +1,1 @@
+svcutil http://localhost:9081/ /o:ServiceProxy.cs /config:App.Config /n:*,ConsoleTestProject

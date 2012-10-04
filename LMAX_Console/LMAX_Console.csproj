@@ -1,0 +1,118 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">x86</Platform>
+    <ProductVersion>8.0.30703</ProductVersion>
+    <SchemaVersion>2.0</SchemaVersion>
+    <ProjectGuid>{69CB8CEB-0669-47A7-A348-197390B058EF}</ProjectGuid>
+    <OutputType>Exe</OutputType>
+    <AppDesignerFolder>Properties</AppDesignerFolder>
+    <RootNamespace>Database</RootNamespace>
+    <AssemblyName>LMAX_Console</AssemblyName>
+    <TargetFrameworkVersion>v4.0</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <TargetFrameworkProfile />
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|x86' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="LmaxClientLibrary">
+      <HintPath>.\LmaxClientLibrary.dll</HintPath>
+    </Reference>
+    <Reference Include="log4net, Version=1.2.11.0, Culture=neutral, PublicKeyToken=669e0ddf0bb1aa2a, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>Log4Net\release\log4net.dll</HintPath>
+    </Reference>
+    <Reference Include="SQLite.Designer, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\System.Data.SQLite\2010\bin\SQLite.Designer.dll</HintPath>
+    </Reference>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Data.SQLite, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=x86">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\System.Data.SQLite\2010\bin\System.Data.SQLite.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data.SQLite.Linq, Version=1.0.81.0, Culture=neutral, PublicKeyToken=db937bc2d44ff139, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\..\..\..\..\..\Program Files\System.Data.SQLite\2010\bin\System.Data.SQLite.Linq.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ServiceModel" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="DataTypes\FollowerPropereties.cs" />
+    <Compile Include="Follower\API.cs" />
+    <Compile Include="ClientsManagerUtilities\ExternalClientManager.cs" />
+    <Compile Include="ClientsManagerUtilities\IExternalCleitnManager.cs" />
+    <Compile Include="Database\DataBase.cs" />
+    <Compile Include="Database\LocalDbHandler.cs" />
+    <Compile Include="Database\MainDBhandler.cs" />
+    <Compile Include="Database\Types\CompleteFollower.cs" />
+    <Compile Include="DataTypes\Order.cs" />
+    <Compile Include="DataTypes\Position.cs" />
+    <Compile Include="DateFileWritter.cs" />
+    <Compile Include="DBResult.cs" />
+    <Compile Include="Database\LocalDatabase\DbFactory.cs" />
+    <Compile Include="HistoryAnalysis\DataHistoryRow.cs" />
+    <Compile Include="Operations.cs" />
+    <Compile Include="OrdersReq.cs" />
+    <Compile Include="Follower\OrderTransaction.cs" />
+    <Compile Include="PortListener\NETlistener.cs" />
+    <Compile Include="PortListener\NewUserListener.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Program2.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="Follower\TradingClass.cs" />
+    <Compile Include="SenderClass.cs" />
+    <Compile Include="SystemContainer.cs" />
+    <Compile Include="TSystem.cs" />
+    <Compile Include="Utilities\ConfLoader.cs" />
+    <Compile Include="Utilities\ErrorHandler.cs" />
+    <Compile Include="Database\LocalDatabase\LocalDbAdapter.cs" />
+    <Compile Include="HistoryAnalysis\StateObject.cs" />
+    <Compile Include="Utilities\FollwerPropereties.cs" />
+    <Compile Include="Utilities\Presets.cs" />
+    <Compile Include="Utilities\PrintUtility.cs" />
+    <Compile Include="Utilities\SynchronizationSolver.cs" />
+    <Compile Include="Utilities\UserManager.cs" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="app.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\ClientsInfo\ClientsInfo.csproj">
+      <Project>{F41E87A3-F043-4ADD-9768-BA0AE16B38EE}</Project>
+      <Name>ClientsInfo</Name>
+    </ProjectReference>
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
+       Other similar extension points exist, see Microsoft.Common.targets.
+  <Target Name="BeforeBuild">
+  </Target>
+  <Target Name="AfterBuild">
+  </Target>
+  -->
+</Project>
