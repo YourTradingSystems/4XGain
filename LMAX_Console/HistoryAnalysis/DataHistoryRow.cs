@@ -43,5 +43,6 @@ namespace DataChangeMonitor
                 .Append(OperationType).Append(";");
             return strBuilder.ToString();
         }
+        /*This is a comment to commit to GitHub*/
     }
 }
